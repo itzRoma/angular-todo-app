@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 interface Todo {
   id: number;
@@ -21,23 +22,32 @@ const todos: Todo[] = [
 export class AppComponent {
   editing = false;
   todos = todos;
-  title = '';
+  todoForm = new FormGroup({
+    title: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
+  });
+
+  get title() {
+    return this.todoForm.get('title') as FormControl;
+  }
 
   get activeTodos() {
     return this.todos.filter((todo) => !todo.completed);
   }
 
   addTodo() {
-    if (!this.title.trim()) {
+    if (this.todoForm.invalid) {
       return;
     }
 
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title,
+      title: this.title.value,
       completed: false,
     };
     this.todos.push(newTodo);
-    this.title = '';
+    this.todoForm.reset();
   }
 }
