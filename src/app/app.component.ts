@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { Todo } from './types/todo';
 
 const todos: Todo[] = [
   { id: 1, title: 'HTML + CSS', completed: true },
@@ -20,7 +15,6 @@ const todos: Todo[] = [
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  editing = false;
   todos = todos;
   todoForm = new FormGroup({
     title: new FormControl('', {
