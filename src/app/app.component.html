@@ -18,10 +18,15 @@
       <div
         class="todo"
         [class.completed]="todo.completed"
-        *ngFor="let todo of todos"
+        *ngFor="let todo of todos; let i = index"
       >
         <label class="todo__status-label">
-          <input type="checkbox" class="todo__status" checked />
+          <input
+            type="checkbox"
+            class="todo__status"
+            [checked]="todo.completed"
+            (change)="handleTodoToggle($event, todo)"
+          />
         </label>
 
         <form *ngIf="editing; else titleBlock">
@@ -36,7 +41,7 @@
         <ng-template #titleBlock>
           <span class="todo__title">{{ todo.title }}</span>
 
-          <button class="todo__remove">x</button>
+          <button class="todo__remove" (click)="todos.splice(i, 1)">x</button>
         </ng-template>
 
         <div class="modal overlay" [class.is-active]="false">
