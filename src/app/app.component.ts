@@ -21,8 +21,23 @@ const todos: Todo[] = [
 export class AppComponent {
   editing = false;
   todos = todos;
+  title = '';
 
   get activeTodos() {
     return this.todos.filter((todo) => !todo.completed);
+  }
+
+  addTodo() {
+    if (!this.title.trim()) {
+      return;
+    }
+
+    const newTodo: Todo = {
+      id: Date.now(),
+      title: this.title,
+      completed: false,
+    };
+    this.todos.push(newTodo);
+    this.title = '';
   }
 }
