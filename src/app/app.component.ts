@@ -21,4 +21,8 @@ const todos: Todo[] = [
 export class AppComponent {
   editing = false;
   todos = todos;
+
+  get activeTodos() {
+    return this.todos.filter((todo) => !todo.completed);
+  }
 }
