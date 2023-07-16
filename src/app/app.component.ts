@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Todo } from './types/todo';
 
@@ -13,6 +13,7 @@ const todos: Todo[] = [
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   todos = todos;
@@ -31,17 +32,42 @@ export class AppComponent {
     return this.todos.filter((todo) => !todo.completed);
   }
 
-  addTodo() {
+  trackById(i: number, todo: Todo) {
+    return todo.id;
+  }
+
+  handleFormSubmit() {
     if (this.todoForm.invalid) {
       return;
     }
+    this.addTodo(this.title.value);
+    this.todoForm.reset();
+  }
 
+  addTodo(newTitle: string) {
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title.value,
+      title: newTitle,
       completed: false,
     };
-    this.todos.push(newTodo);
-    this.todoForm.reset();
+    this.todos = [...this.todos, newTodo];
+  }
+
+  renameTodo(todoId: number, newTitle: string) {
+    this.todos = this.todos.map((todo) => {
+      return todo.id !== todoId ? todo : { ...todo, title: newTitle };
+    });
+  }
+
+  toggleTodo(todoId: number) {
+    this.todos = this.todos.map((todo) => {
+      return todo.id !== todoId
+        ? todo
+        : { ...todo, completed: !todo.completed };
+    });
+  }
+
+  deleteTodo(todoId: number) {
+    this.todos = this.todos.filter((todo) => todo.id !== todoId);
   }
 }
